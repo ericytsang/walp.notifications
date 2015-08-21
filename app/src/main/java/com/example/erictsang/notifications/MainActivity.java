@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity
 {
     private NotificationManager notificationManager;
     private int notificationCount;
+    private int notificationUpdateCount;
 
     // AppCompatActivity
 
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity
         // initialize instance data
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationCount = 0;
+        notificationUpdateCount = 0;
     }
 
     @Override
@@ -49,14 +51,14 @@ public class MainActivity extends AppCompatActivity
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public synchronized void insertNotification(View unused)
     {
-        // derive notification ID from notification count. notification ID is
-        // needed, so we can update our notifications after they have been
+        // derive new notification ID from notification count. notification ID
+        // is needed, so we can update our notifications after they have been
         // created.
         int notificationId = notificationCount++;
 
         // build the notification
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setPriority(Notification.PRIORITY_MAX)
+                .setPriority(Notification.PRIORITY_HIGH)
                 .setContentTitle("Notification #"+notificationId)
                 .setContentText("This is the content text! :)")
                 .setSmallIcon(R.mipmap.ic_launcher);
@@ -72,8 +74,37 @@ public class MainActivity extends AppCompatActivity
      * @param unused unused parameter. present, because need to match signature
      *               for {@link Button.OnClickListener}
      */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public synchronized void updateNotification(View unused)
     {
+        // derive random, existing notification ID from notification count.
+        // notification ID is needed, so we can update our notifications after
+        // they have been created.
+        int notificationId = (int) (Math.random()*notificationCount);
+
+        // derive new update notification ID from update notification ID count.
+        // this id is only used for show
+        int notificationUpdateId = notificationUpdateCount++;
+
+        // build the lame one-line updated notification
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setPriority(Notification.PRIORITY_HIGH)
+                .setContentTitle("Notification #"+notificationId)
+                .setContentText("This is update #"+notificationUpdateId)
+                .setSmallIcon(R.mipmap.ic_launcher);
+
+        // create, and add the expanded notification things to the notification
+        // Sets a title for the Inbox in expanded layout
+        notificationBuilder.setStyle(new NotificationCompat.InboxStyle()
+                .setBigContentTitle("Big Content Title:")
+                .setSummaryText("Summary Text")
+                .addLine("added line #1")
+                .addLine("added line #2")
+                .addLine("added line #3")
+                .addLine("added line #4"));
+
+        // notify the user
+        notificationManager.notify(notificationId,notificationBuilder.build());
     }
 
     /**
