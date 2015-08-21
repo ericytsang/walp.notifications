@@ -3,9 +3,12 @@ package com.example.erictsang.notifications;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -63,6 +66,17 @@ public class MainActivity extends AppCompatActivity
                 .setContentText("This is the content text! :)")
                 .setSmallIcon(R.mipmap.ic_launcher);
 
+        // configure notification so when it's clicked, it opens our app with
+        // an artificial back stack that leads "up", out of our app, and ends at
+        // android's home screen as per Android guidelines.
+        Intent intent = new Intent(this,MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(intent);
+        PendingIntent pendingIntent = stackBuilder.getPendingIntent(
+                        0,PendingIntent.FLAG_UPDATE_CURRENT);
+        notificationBuilder.setContentIntent(pendingIntent);
+
         // notify the user
         notificationManager.notify(notificationId,notificationBuilder.build());
     }
@@ -95,6 +109,7 @@ public class MainActivity extends AppCompatActivity
 
         // create, and add the expanded notification things to the notification
         // Sets a title for the Inbox in expanded layout
+        // (only available inAndroid 4.1 and above)
         notificationBuilder.setStyle(new NotificationCompat.InboxStyle()
                 .setBigContentTitle("Big Content Title:")
                 .setSummaryText("Summary Text")
@@ -102,6 +117,17 @@ public class MainActivity extends AppCompatActivity
                 .addLine("added line #2")
                 .addLine("added line #3")
                 .addLine("added line #4"));
+
+        // configure notification so when it's clicked, it opens our app with
+        // an artificial back stack that leads "up", out of our app, and ends at
+        // android's home screen as per Android guidelines.
+        Intent intent = new Intent(this,MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(intent);
+        PendingIntent pendingIntent = stackBuilder.getPendingIntent(
+                0,PendingIntent.FLAG_UPDATE_CURRENT);
+        notificationBuilder.setContentIntent(pendingIntent);
 
         // notify the user
         notificationManager.notify(notificationId,notificationBuilder.build());
