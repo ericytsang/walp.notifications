@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Notifications</string>
-
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <!-- activity_main -->
+    <string name="insert_notification">Insert Notification</string>
+    <string name="update_notification">Update Notification</string>
+    <string name="delete_notification">Delete Notification</string>
 </resources>
